@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фізика 7 клас • Густина речовини (Урок 4)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax для відображення фізичних формул -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .physics-board {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+        }
+        .btn-action { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-action:hover { transform: translateY(-2px); }
+        .btn-action:active { transform: translateY(0); }
+        
+        .tab-btn.active {
+            background-color: #0284c7;
+            color: white;
+            border-color: #0284c7;
+        }
+        .tab-btn:not(.active) {
+            background-color: white;
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+        .tab-btn:not(.active):hover {
+            background-color: #f8fafc;
+        }
+
+        /* Стилізація клітинок зошита з макету */
+        .notebook-grid {
+            background-size: 24px 24px;
+            background-image: 
+                linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+                linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+            border: 1px solid #94a3b8;
+        }
+
+        /* Поля вводу */
+        .input-box {
+            border-bottom: 3px solid #0284c7;
+            background-color: #f0f9ff;
+            color: #0c4a6e;
+            font-weight: 800;
+            padding: 4px 10px;
+            text-align: center;
+            outline: none;
+            border-radius: 6px 6px 0 0;
+        }
+        .input-box:focus {
+            background-color: #e0f2fe;
+            border-bottom-color: #0369a1;
+        }
+
+        /* Кастомний скролбар */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-100 select-none">
+
+    <!-- ШАПКА УРОКУ -->
+    <header class="bg-white border-b-2 border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between shrink-0 shadow-sm z-10">
+        <div class="flex items-center gap-4">
+            <!-- Логотип атома як на скріні -->
+            <div class="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl bg-sky-50 border-2 border-sky-600 text-sky-700">
+                <svg viewBox="0 0 100 100" class="w-9 h-9">
+                    <circle cx="50" cy="50" r="10" fill="currentColor"/>
+                    <ellipse cx="50" cy="50" rx="42" ry="16" fill="none" stroke="currentColor" stroke-width="4" transform="rotate(0 50 50)"/>
+                    <ellipse cx="50" cy="50" rx="42" ry="16" fill="none" stroke="currentColor" stroke-width="4" transform="rotate(60 50 50)"/>
+                    <ellipse cx="50" cy="50" rx="42" ry="16" fill="none" stroke="currentColor" stroke-width="4" transform="rotate(120 50 50)"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">Густина речовини</h1>
+                <p class="text-sm md:text-base text-slate-500 font-bold">Фізика 7 клас • Інтерактивний робочий зошит</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="border-2 border-slate-800 px-3 py-1 rounded-lg bg-white flex flex-col items-center justify-center">
+                <span class="text-[11px] font-black text-slate-700 uppercase tracking-wider leading-none">УРОК</span>
+                <span class="text-2xl font-black text-slate-900 leading-none">4</span>
+            </div>
+            <span class="text-lg md:text-xl bg-slate-100 text-slate-800 font-black px-4 py-2 rounded-xl border border-slate-300 font-mono" id="slide-indicator">1 / 6</span>
+            <button onclick="toggleFullscreen()" class="p-3 text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition border border-slate-300" title="На весь екран">
+                <i class="fas fa-expand text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ОСНОВНИЙ КОНТЕНТ ЗІ СКРОЛІНГОМ -->
+    <main id="main-scroll" class="flex-grow relative overflow-y-auto overflow-x-hidden p-3 md:p-6 flex flex-col items-center max-w-[1440px] mx-auto w-full">
+
+        <!-- СЛАЙД 1: ПОЧАТОК УРОКУ ТА ЗАВДАННЯ 1–3 -->
+        <section id="slide-0" class="slide-content w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-clipboard-question text-sky-600"></i> Завдання 1–3. Повторення опорних знань
+                    </h2>
+                    <span class="bg-sky-100 text-sky-800 font-extrabold px-4 py-1.5 rounded-full text-base">Натисни на картку, щоб перевірити відповідь</span>
+                </div>
+
+                <!-- Пункти 1 і 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white font-black text-2xl flex items-center justify-center shrink-0">1</div>
+                        <p class="text-xl md:text-2xl font-bold text-emerald-950">Налаштуйся на активну роботу на уроці.</p>
+                    </div>
+                    <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-600 text-white font-black text-2xl flex items-center justify-center shrink-0">2</div>
+                        <p class="text-xl md:text-2xl font-bold text-amber-950">Попрацюй за методикою перевірки домашнього завдання.</p>
+                    </div>
+                </div>
+
+                <!-- Завдання 3 -->
+                <div class="space-y-5 mt-2">
+                    <h3 class="text-2xl md:text-3xl font-black text-slate-800">3. Дай відповіді на запитання:</h3>
+                    
+                    <!-- Питання 3.1 -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 md:p-6">
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4 flex items-start gap-3">
+                            <span class="text-sky-600">•</span> Що називають масою тіла?
+                        </p>
+                        <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-sky-50/70 min-h-[76px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-sky-400">
+                            <span class="text-xl md:text-2xl font-bold text-sky-700 bg-white/90 px-4 py-1 rounded-lg shadow-sm">
+                                <i class="fa-solid fa-eye mr-2"></i> Показати визначення
+                            </span>
+                        </button>
+                        <div class="hidden bg-sky-100 border-2 border-sky-400 text-sky-950 p-5 rounded-xl text-xl md:text-2xl font-bold leading-relaxed">
+                            <strong>Маса тіла</strong> — це фізична величина, яка є мірою інертності тіла (а також мірою його гравітаційної взаємодії). Одиниця в СІ: $[m] = \text{кг}$.
+                        </div>
+                    </div>
+
+                    <!-- Питання 3.2 -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 md:p-6">
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4 flex items-start gap-3">
+                            <span class="text-sky-600">•</span> Як виміряти об’єм тіла правильної форми та об’єм тіла неправильної форми?
+                        </p>
+                        <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-sky-50/70 min-h-[76px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-sky-400">
+                            <span class="text-xl md:text-2xl font-bold text-sky-700 bg-white/90 px-4 py-1 rounded-lg shadow-sm">
+                                <i class="fa-solid fa-eye mr-2"></i> Показати відповідь
+                            </span>
+                        </button>
+                        <div class="hidden bg-sky-100 border-2 border-sky-400 text-sky-950 p-5 rounded-xl text-xl md:text-2xl font-bold leading-relaxed space-y-2">
+                            <p>1) <strong>Правильної форми (наприклад, паралелепіпед):</strong> виміряти лінійкою довжину $a$, ширину $b$, висоту $c$ та обчислити за формулою $V = a \cdot b \cdot c$.</p>
+                            <p>2) <strong>Неправильної форми:</strong> за допомогою вимірювального циліндра (мензурки) за об’ємом витісненої рідини: $V = V_2 - V_1$.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЛАЙД 2: ЗАВДАННЯ 4 ТА 5 (ДОСЛІДИ НА ТЕРЕЗАХ + ОЗНАЧЕННЯ ГУСТИНИ) -->
+        <section id="slide-1" class="slide-content hidden w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-scale-balanced text-indigo-600"></i> Поняття густини речовини
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="switchInnerTab('s1-tab1', this)" class="tab-btn active text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Завдання 4 (Досліди)</button>
+                        <button onclick="switchInnerTab('s1-tab2', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Завдання 5 (Запам'ятай!)</button>
+                    </div>
+                </div>
+
+                <!-- Вкладка 4: Досліди з терезами -->
+                <div id="s1-tab1" class="inner-tab flex flex-col gap-6">
+                    <p class="text-2xl md:text-3xl font-extrabold text-slate-800">4. Переглянь досліди, що демонструє вчитель / учителька, і спробуй пояснити, чому так відбувається.</p>
+
+                    <!-- Дослід 1: Тіла різного об'єму, терези врівноважені -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-7 space-y-4">
+                            <p class="text-xl md:text-2xl font-extrabold text-slate-900">
+                                • На шальки терезів поставили <strong>тіла різного об’єму</strong>, але терези за такої умови <strong>врівноважені</strong>.
+                            </p>
+                            <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-indigo-50 min-h-[96px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-indigo-400">
+                                <span class="text-xl font-bold text-indigo-700 bg-white/95 px-4 py-1.5 rounded-lg shadow-sm"><i class="fa-solid fa-lightbulb mr-2"></i> Пояснення досліду</span>
+                            </button>
+                            <div class="hidden bg-indigo-100 border-2 border-indigo-400 text-indigo-950 p-4 rounded-xl text-xl md:text-2xl font-bold">
+                                Тіла виготовлені з <strong>різних речовин</strong>. Хоча їхні маси однакові ($m_1 = m_2$), але об’єми різні ($V_1 > V_2$), бо речовина правого тіла має більшу густину.
+                            </div>
+                        </div>
+                        <div class="lg:col-span-5 flex justify-center bg-white p-4 rounded-2xl border border-slate-200">
+                            <!-- Векторний малюнок терезів (рівновага, різні об'єми) -->
+                            <svg viewBox="0 0 360 210" class="w-full max-w-[340px] h-auto">
+                                <!-- Основа і стійка -->
+                                <polygon points="130,195 230,195 215,180 145,180" fill="#475569"/>
+                                <rect x="174" y="45" width="12" height="135" fill="#475569" rx="2"/>
+                                <!-- Коромисло (горизонтальне) -->
+                                <rect x="65" y="40" width="230" height="8" fill="#334155" rx="3"/>
+                                <circle cx="180" cy="44" r="7" fill="#0f172a"/>
+                                <!-- Ліва підвіска і шалька -->
+                                <line x1="75" y1="48" x2="40" y2="125" stroke="#64748b" stroke-width="2.5"/>
+                                <line x1="75" y1="48" x2="110" y2="125" stroke="#64748b" stroke-width="2.5"/>
+                                <path d="M30,125 Q75,148 120,125 Z" fill="#d97706"/>
+                                <!-- Великий світлий циліндр (більший об'єм) -->
+                                <rect x="52" y="75" width="46" height="50" fill="#cbd5e1" stroke="#64748b" stroke-width="2" rx="3"/>
+                                <rect x="67" y="67" width="16" height="8" fill="#94a3b8" rx="2"/>
+                                <!-- Права підвіска і шалька -->
+                                <line x1="285" y1="48" x2="250" y2="125" stroke="#64748b" stroke-width="2.5"/>
+                                <line x1="285" y1="48" x2="320" y2="125" stroke="#64748b" stroke-width="2.5"/>
+                                <path d="M240,125 Q285,148 330,125 Z" fill="#d97706"/>
+                                <!-- Менший темний циліндр (менший об'єм) -->
+                                <rect x="268" y="88" width="34" height="37" fill="#57534e" stroke="#292524" stroke-width="2" rx="3"/>
+                                <rect x="279" y="81" width="12" height="7" fill="#44403c" rx="2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Дослід 2: Тіла однакового об'єму, терези не врівноважені -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-7 space-y-4">
+                            <p class="text-xl md:text-2xl font-extrabold text-slate-900">
+                                • На шальки терезів поставили <strong>тіла однакового об’єму</strong>, але терези за такої умови <strong>не врівноважені</strong>.
+                            </p>
+                            <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-indigo-50 min-h-[96px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-indigo-400">
+                                <span class="text-xl font-bold text-indigo-700 bg-white/95 px-4 py-1.5 rounded-lg shadow-sm"><i class="fa-solid fa-lightbulb mr-2"></i> Пояснення досліду</span>
+                            </button>
+                            <div class="hidden bg-indigo-100 border-2 border-indigo-400 text-indigo-950 p-4 rounded-xl text-xl md:text-2xl font-bold">
+                                Тіла однакового об’єму ($V_1 = V_2$), виготовлені з <strong>різних речовин</strong>, мають <strong>різну масу</strong> ($m_1 > m_2$).
+                            </div>
+                        </div>
+                        <div class="lg:col-span-5 flex justify-center bg-white p-4 rounded-2xl border border-slate-200">
+                            <!-- Векторний малюнок терезів (нахилені, однакові об'єми) -->
+                            <svg viewBox="0 0 360 210" class="w-full max-w-[340px] h-auto">
+                                <polygon points="130,195 230,195 215,180 145,180" fill="#475569"/>
+                                <rect x="174" y="45" width="12" height="135" fill="#475569" rx="2"/>
+                                <!-- Нахилене коромисло -->
+                                <g transform="rotate(-11 180 44)">
+                                    <rect x="65" y="40" width="230" height="8" fill="#334155" rx="3"/>
+                                </g>
+                                <circle cx="180" cy="44" r="7" fill="#0f172a"/>
+                                <!-- Ліва шалька нижче (x=77, y=64) -->
+                                <line x1="77" y1="64" x2="42" y2="140" stroke="#64748b" stroke-width="2.5"/>
+                                <line x1="77" y1="64" x2="112" y2="140" stroke="#64748b" stroke-width="2.5"/>
+                                <path d="M32,140 Q77,163 122,140 Z" fill="#d97706"/>
+                                <!-- Світле тіло такого ж об'єму -->
+                                <rect x="59" y="98" width="36" height="42" fill="#cbd5e1" stroke="#64748b" stroke-width="2" rx="3"/>
+                                <rect x="71" y="91" width="12" height="7" fill="#94a3b8" rx="2"/>
+                                <!-- Права шалька вище (x=283, y=24) -->
+                                <line x1="283" y1="24" x2="248" y2="100" stroke="#64748b" stroke-width="2.5"/>
+                                <line x1="283" y1="24" x2="318" y2="100" stroke="#64748b" stroke-width="2.5"/>
+                                <path d="M238,100 Q283,123 328,100 Z" fill="#d97706"/>
+                                <!-- Темне тіло такого ж об'єму -->
+                                <rect x="265" y="58" width="36" height="42" fill="#57534e" stroke="#292524" stroke-width="2" rx="3"/>
+                                <rect x="277" y="51" width="12" height="7" fill="#44403c" rx="2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Міркування про циліндр та висновок -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 flex flex-col justify-between gap-3">
+                            <p class="text-xl md:text-2xl font-extrabold text-amber-950">
+                                • Поміркуй, чи однакові значення будуть отримані: якщо масу циліндра поділити на його об’єм; якщо масу половини цього циліндра поділити на об’єм половини циліндра.
+                            </p>
+                            <button onclick="revealBlock(this)" class="w-full bg-white hover:bg-amber-100 border-2 border-amber-400 text-amber-900 font-bold text-xl py-3 rounded-xl transition">Показати відповідь</button>
+                            <div class="hidden bg-white border-2 border-amber-500 p-4 rounded-xl text-xl font-bold text-amber-950">
+                                <strong>Так, значення будуть однакові!</strong> Адже при зменшенні об’єму у 2 рази маса також зменшиться у 2 рази: $\frac{m/2}{V/2} = \frac{m}{V}$.
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 flex flex-col justify-between gap-3">
+                            <p class="text-xl md:text-2xl font-extrabold text-emerald-950">
+                                • Який висновок можна зробити з попередніх міркувань?
+                            </p>
+                            <button onclick="revealBlock(this)" class="w-full bg-white hover:bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-bold text-xl py-3 rounded-xl transition">Показати висновок</button>
+                            <div class="hidden bg-white border-2 border-emerald-500 p-4 rounded-xl text-xl font-bold text-emerald-950">
+                                Відношення маси однорідного тіла до його об’єму є <strong>сталою величиною</strong> для даної речовини і не залежить від розмірів чи форми тіла.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка 5: Запам'ятовую ефективно -->
+                <div id="s1-tab2" class="inner-tab hidden py-4">
+                    <div class="bg-white border-4 border-slate-800 rounded-3xl p-6 md:p-10 relative shadow-xl mx-auto w-full max-w-5xl mt-4">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 md:px-8 py-2 rounded-full font-black text-lg md:text-xl uppercase tracking-wider shadow-lg whitespace-nowrap">
+                            5. Запам'ятовую ефективно
+                        </div>
+                        <ol class="list-decimal list-inside space-y-6 text-2xl md:text-3xl font-bold text-slate-800 leading-relaxed mt-4">
+                            <li>
+                                Характеристикою речовини є <span class="text-sky-700 font-black">густина</span>.
+                            </li>
+                            <li>
+                                <span class="text-sky-700 font-black">Густина речовини</span> — фізична величина, що дорівнює відношенню маси суцільного тіла, виготовленого із цієї речовини, до об’єму цього тіла:
+                                <div class="my-5 flex flex-wrap items-center justify-center gap-6">
+                                    <div class="bg-sky-50 border-4 border-sky-400 rounded-2xl px-8 py-4 text-4xl md:text-5xl font-black text-sky-950">
+                                        $$\rho = \frac{m}{V}$$
+                                    </div>
+                                    <div class="bg-emerald-50 border-4 border-emerald-400 rounded-2xl px-8 py-4 text-3xl md:text-4xl font-black text-emerald-950">
+                                        У СІ: $[\rho] = \frac{\text{кг}}{\text{м}^3}$
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                Густина речовини показує, <span class="text-rose-600">яку масу має одиниця об’єму цієї речовини</span>.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЛАЙД 3: ЗАВДАННЯ 6, 7 ТА 8.1–8.2 (ОДИНИЦІ, МОЛЕКУЛЯРНА БУДОВА, АРЕОМЕТР) -->
+        <section id="slide-2" class="slide-content hidden w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-atoms text-teal-600"></i> Одиниці густини, будова речовини та вимірювання
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="switchInnerTab('s2-tab1', this)" class="tab-btn active text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Завдання 6–7</button>
+                        <button onclick="switchInnerTab('s2-tab2', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Завдання 8.1–8.2</button>
+                    </div>
+                </div>
+
+                <!-- Вкладка 6–7 -->
+                <div id="s2-tab1" class="inner-tab flex flex-col gap-6">
+                    <!-- Завдання 6 -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 md:p-6">
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4">
+                            6. Густина заліза дорівнює $7\,800\ \frac{\text{кг}}{\text{м}^3}$. Поясни, що це означає.
+                        </p>
+                        <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-teal-50 min-h-[72px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-teal-400">
+                            <span class="text-xl md:text-2xl font-bold text-teal-700 bg-white/95 px-4 py-1 rounded-lg shadow-sm"><i class="fa-solid fa-eye mr-2"></i> Показати пояснення</span>
+                        </button>
+                        <div class="hidden bg-teal-100 border-2 border-teal-500 text-teal-950 p-5 rounded-xl text-2xl font-bold">
+                            Це означає, що суцільний шматок заліза об’ємом <strong>$1\ \text{м}^3$</strong> має масу <strong>$7\,800\ \text{кг}$</strong> (або $1\ \text{см}^3$ заліза має масу $7,8\ \text{г}$).
+                        </div>
+                    </div>
+
+                    <!-- Завдання 7 -->
+                    <div class="bg-white border-4 border-slate-800 rounded-3xl p-6 md:p-8 shadow-lg">
+                        <h3 class="text-2xl md:text-3xl font-black text-slate-900 mb-4">
+                            7. Запам’ятай інформацію. Переведення густини речовини, вираженої в одних одиницях, в інші одиниці:
+                        </h3>
+                        <div class="space-y-4 text-xl md:text-2xl font-bold text-slate-800 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 overflow-x-auto">
+                            <div class="py-2">
+                                $$ 1\,000\ \frac{\text{кг}}{\text{м}^3} = \frac{1\,000\ \text{кг}}{1\ \text{м}^3} = \frac{1\,000 \cdot 1\,000\ \text{г}}{1 \cdot 100\ \text{см} \cdot 100\ \text{см} \cdot 100\ \text{см}} = 1\ \frac{\text{г}}{\text{см}^3} $$
+                            </div>
+                            <div class="py-2 border-t border-slate-300">
+                                $$ 1\ \frac{\text{г}}{\text{см}^3} = \frac{1\ \text{г}}{1\ \text{см}^3} = \frac{1 \cdot 0,001\ \text{кг}}{1 \cdot 0,01\ \text{м} \cdot 0,01\ \text{м} \cdot 0,01\ \text{м}} = 1\,000\ \frac{\text{кг}}{\text{м}^3} $$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка 8.1 та 8.2 -->
+                <div id="s2-tab2" class="inner-tab hidden flex flex-col gap-6">
+                    <!-- Завдання 8.1 -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 md:p-6">
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-5">
+                            8.1. Послуговуючись знаннями про молекулярну будову речовини, поясни, чому різні речовини мають різну густину.
+                        </p>
+                        
+                        <!-- Три моделі агрегатних станів як на скріншоті -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+                            <!-- Газ -->
+                            <div class="bg-white border-2 border-sky-200 rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+                                <svg viewBox="0 0 140 140" class="w-32 h-32 mb-2">
+                                    <circle cx="70" cy="70" r="62" fill="#bae6fd" stroke="#7dd3fc" stroke-width="5"/>
+                                    <circle cx="42" cy="48" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="95" cy="42" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="68" cy="76" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="38" cy="96" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="102" cy="92" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                </svg>
+                                <p class="text-xl font-extrabold text-slate-800">Модель речовини в газоподібному / газуватому стані</p>
+                            </div>
+
+                            <!-- Рідина -->
+                            <div class="bg-white border-2 border-sky-200 rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+                                <svg viewBox="0 0 140 140" class="w-32 h-32 mb-2">
+                                    <circle cx="70" cy="70" r="62" fill="#bae6fd" stroke="#7dd3fc" stroke-width="5"/>
+                                    <circle cx="46" cy="42" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="72" cy="36" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="96" cy="48" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="38" cy="68" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="64" cy="64" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="88" cy="72" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="48" cy="94" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="76" cy="98" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                    <circle cx="100" cy="92" r="7" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+                                </svg>
+                                <p class="text-xl font-extrabold text-slate-800">Модель речовини в рідкому стані</p>
+                            </div>
+
+                            <!-- Тверде тіло -->
+                            <div class="bg-white border-2 border-sky-200 rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+                                <svg viewBox="0 0 140 140" class="w-32 h-32 mb-2">
+                                    <circle cx="70" cy="70" r="62" fill="#bae6fd" stroke="#7dd3fc" stroke-width="5"/>
+                                    <!-- Щільна кристалічна решітка -->
+                                    <g fill="#fde047" stroke="#eab308" stroke-width="1.5">
+                                        <circle cx="48" cy="36" r="7"/><circle cx="70" cy="36" r="7"/><circle cx="92" cy="36" r="7"/>
+                                        <circle cx="37" cy="54" r="7"/><circle cx="59" cy="54" r="7"/><circle cx="81" cy="54" r="7"/><circle cx="103" cy="54" r="7"/>
+                                        <circle cx="32" cy="72" r="7"/><circle cx="54" cy="72" r="7"/><circle cx="76" cy="72" r="7"/><circle cx="98" cy="72" r="7"/>
+                                        <circle cx="42" cy="90" r="7"/><circle cx="64" cy="90" r="7"/><circle cx="86" cy="90" r="7"/>
+                                        <circle cx="54" cy="106" r="7"/><circle cx="76" cy="106" r="7"/>
+                                    </g>
+                                </svg>
+                                <p class="text-xl font-extrabold text-slate-800">Модель речовини у твердому стані</p>
+                            </div>
+                        </div>
+
+                        <button onclick="revealBlock(this)" class="w-full notebook-grid bg-white hover:bg-sky-50 min-h-[70px] rounded-xl p-4 flex items-center justify-center transition cursor-pointer border-2 border-dashed border-sky-400">
+                            <span class="text-xl md:text-2xl font-bold text-sky-700 bg-white/95 px-4 py-1 rounded-lg shadow-sm"><i class="fa-solid fa-eye mr-2"></i> Показати пояснення</span>
+                        </button>
+                        <div class="hidden bg-sky-100 border-2 border-sky-400 text-sky-950 p-5 rounded-xl text-xl md:text-2xl font-bold">
+                            Різні речовини мають різну густину, тому що в одиниці об’єму міститься <strong>різна кількість молекул (атомів)</strong> (різні відстані між частинками), а також самі молекули різних речовин мають <strong>різну масу</strong>.
+                        </div>
+                    </div>
+
+                    <!-- Завдання 8.2: Ареометр -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 md:p-6">
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4">
+                            8.2. Переглянь відеофрагмент. Укажи на рисунку назву приладу, яким вимірюють густину речовини в рідкому стані, та підпиши його частини.
+                        </p>
+
+                        <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 flex flex-col lg:flex-row items-center justify-between gap-6">
+                            <!-- Векторний ареометр -->
+                            <div class="w-full lg:w-7/12 flex justify-center">
+                                <svg viewBox="0 0 560 220" class="w-full max-w-[540px] h-auto">
+                                    <!-- Назва приладу (верхня лінія) -->
+                                    <line x1="160" y1="35" x2="310" y2="35" stroke="#0f172a" stroke-width="2.5"/>
+                                    <text id="svg-areometer-title" x="235" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#0284c7" class="opacity-0 transition-opacity duration-300">АРЕОМЕТР</text>
+
+                                    <!-- Сам ареометр під кутом -->
+                                    <g transform="translate(150, 175) rotate(-26)">
+                                        <!-- Баласт (дробинки) -->
+                                        <rect x="0" y="-16" width="38" height="32" rx="14" fill="#334155" stroke="#0f172a" stroke-width="2"/>
+                                        <circle cx="10" cy="-6" r="3" fill="#94a3b8"/><circle cx="18" cy="4" r="3" fill="#94a3b8"/>
+                                        <circle cx="26" cy="-5" r="3" fill="#94a3b8"/><circle cx="14" cy="7" r="3" fill="#94a3b8"/>
+                                        <circle cx="24" cy="6" r="3" fill="#94a3b8"/><circle cx="8" cy="2" r="3" fill="#94a3b8"/>
+                                        <!-- Фіксатор баласту -->
+                                        <rect x="36" y="-15" width="10" height="30" fill="#d97706"/>
+                                        <!-- Широкий скляний корпус -->
+                                        <rect x="46" y="-17" width="145" height="34" rx="4" fill="#e2e8f0" fill-opacity="0.75" stroke="#475569" stroke-width="2.5"/>
+                                        <line x1="55" y1="-10" x2="180" y2="-10" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                                        <!-- Перехід до трубки -->
+                                        <polygon points="191,-17 210,-7 210,7 191,17" fill="#e2e8f0" fill-opacity="0.75" stroke="#475569" stroke-width="2"/>
+                                        <!-- Вузька трубка зі шкалою -->
+                                        <rect x="210" y="-7" width="165" height="14" rx="5" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+                                        <!-- Поділки шкали -->
+                                        <line x1="225" y1="-6" x2="225" y2="2" stroke="#0f172a" stroke-width="1.5"/>
+                                        <line x1="240" y1="-6" x2="240" y2="0" stroke="#0f172a" stroke-width="1"/>
+                                        <line x1="255" y1="-6" x2="255" y2="2" stroke="#0f172a" stroke-width="1.5"/>
+                                        <line x1="270" y1="-6" x2="270" y2="0" stroke="#0f172a" stroke-width="1"/>
+                                        <line x1="285" y1="-6" x2="285" y2="2" stroke="#0f172a" stroke-width="1.5"/>
+                                        <line x1="300" y1="-6" x2="300" y2="0" stroke="#0f172a" stroke-width="1"/>
+                                        <line x1="315" y1="-6" x2="315" y2="2" stroke="#0f172a" stroke-width="1.5"/>
+                                        <line x1="330" y1="-6" x2="330" y2="0" stroke="#0f172a" stroke-width="1"/>
+                                        <line x1="345" y1="-6" x2="345" y2="2" stroke="#0f172a" stroke-width="1.5"/>
+                                    </g>
+
+                                    <!-- Виноска ліва: Баласт -->
+                                    <polyline points="155,175 130,152 20,152" fill="none" stroke="#0f172a" stroke-width="2"/>
+                                    <text id="svg-areometer-ballast" x="22" y="144" font-size="18" font-weight="800" fill="#059669" class="opacity-0 transition-opacity duration-300">Баласт (тягарець)</text>
+
+                                    <!-- Виноска права: Шкала -->
+                                    <polyline points="385,68 415,105 545,105" fill="none" stroke="#0f172a" stroke-width="2"/>
+                                    <text id="svg-areometer-scale" x="420" y="97" font-size="18" font-weight="800" fill="#059669" class="opacity-0 transition-opacity duration-300">Шкала густини</text>
+                                </svg>
+                            </div>
+
+                            <!-- Панель підпису -->
+                            <div class="w-full lg:w-5/12 space-y-4">
+                                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 space-y-3">
+                                    <label class="block text-lg font-black text-slate-800">Назва приладу:</label>
+                                    <input type="text" id="areometer-input" placeholder="Введи назву..." class="w-full text-xl font-bold p-3 rounded-xl border-2 border-sky-400 focus:outline-none">
+                                    <button onclick="checkAreometer()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-black text-xl py-3 rounded-xl transition shadow">
+                                        Підписати рисунок
+                                    </button>
+                                </div>
+                                <div id="areometer-feedback" class="hidden p-4 rounded-xl text-lg font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЛАЙД 4: ЗАВДАННЯ 8.3–8.6 (ПОРІВНЯННЯ, СОРТУВАННЯ, ФОРМУЛИ) -->
+        <section id="slide-3" class="slide-content hidden w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-square-root-variable text-amber-600"></i> Завдання 8.3–8.6. Порівняння та формули
+                    </h2>
+                </div>
+
+                <!-- 8.3 -->
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 space-y-4">
+                    <p class="text-xl md:text-2xl font-extrabold text-slate-900 leading-relaxed">
+                        8.3. Два тіла однакового об’єму $1\ \text{м}^3$ виготовили з різних речовин. Густина речовини, з якої виготовлено перше тіло, дорівнює $400\ \frac{\text{кг}}{\text{м}^3}$, а густина речовини, з якої виготовлено друге тіло, — $0,8\ \frac{\text{г}}{\text{см}^3}$. Поясни, маса якого тіла більша.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="check83(this, false)" class="text-xl font-black px-6 py-3 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-100 transition">Першого тіла ($400\ \text{кг}$)</button>
+                        <button onclick="check83(this, true)" class="text-xl font-black px-6 py-3 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-100 transition">Другого тіла ($800\ \text{кг}$)</button>
+                    </div>
+                    <div id="ans-83" class="hidden bg-emerald-100 border-2 border-emerald-500 text-emerald-950 p-4 rounded-xl text-xl font-bold">
+                        <strong>Пояснення:</strong> Переведемо густину другого тіла в СІ: $\rho_2 = 0,8\ \frac{\text{г}}{\text{см}^3} = 800\ \frac{\text{кг}}{\text{м}^3}$. Оскільки об’єми однакові ($V = 1\ \text{м}^3$), то $m_1 = 400\ \text{кг}$, а $m_2 = 800\ \text{кг}$. Отже, маса <strong>другого тіла більша у 2 рази</strong>.
+                    </div>
+                </div>
+
+                <!-- 8.4 -->
+                <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 space-y-4">
+                    <p class="text-xl md:text-2xl font-extrabold text-amber-950">
+                        8.4. Розташуй значення густин деяких речовин за збільшенням:
+                    </p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xl md:text-2xl font-black bg-white p-4 rounded-xl border border-amber-300 text-center">
+                        <div>А: $600\ \frac{\text{кг}}{\text{м}^3}$</div>
+                        <div>Б: $1,2\ \frac{\text{г}}{\text{см}^3}$</div>
+                        <div>В: $900\ \frac{\text{кг}}{\text{м}^3}$</div>
+                        <div>Г: $0,7\ \frac{\text{г}}{\text{см}^3}$</div>
+                    </div>
+                    <!-- Табличка 1 2 3 4 як у зошиті -->
+                    <div class="flex flex-wrap items-center gap-4">
+                        <table class="border-collapse border-2 border-slate-800 bg-white text-center text-2xl font-black">
+                            <tr>
+                                <th class="border-2 border-slate-800 px-5 py-1.5 bg-slate-100">1</th>
+                                <th class="border-2 border-slate-800 px-5 py-1.5 bg-slate-100">2</th>
+                                <th class="border-2 border-slate-800 px-5 py-1.5 bg-slate-100">3</th>
+                                <th class="border-2 border-slate-800 px-5 py-1.5 bg-slate-100">4</th>
+                            </tr>
+                            <tr id="sort-84-row">
+                                <td class="border-2 border-slate-800 px-5 py-2 text-sky-700">?</td>
+                                <td class="border-2 border-slate-800 px-5 py-2 text-sky-700">?</td>
+                                <td class="border-2 border-slate-800 px-5 py-2 text-sky-700">?</td>
+                                <td class="border-2 border-slate-800 px-5 py-2 text-sky-700">?</td>
+                            </tr>
+                        </table>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-grow">
+                            <button onclick="check84(this, false)" class="bg-white border-2 border-slate-300 py-3 px-4 rounded-xl text-xl font-black hover:bg-slate-100">А, Б, В, Г</button>
+                            <button onclick="check84(this, true)" class="bg-white border-2 border-slate-300 py-3 px-4 rounded-xl text-xl font-black hover:bg-slate-100">А, Г, В, Б</button>
+                            <button onclick="check84(this, false)" class="bg-white border-2 border-slate-300 py-3 px-4 rounded-xl text-xl font-black hover:bg-slate-100">Г, А, В, Б</button>
+                            <button onclick="check84(this, false)" class="bg-white border-2 border-slate-300 py-3 px-4 rounded-xl text-xl font-black hover:bg-slate-100">Б, В, Г, А</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8.5 та 8.6 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <!-- 8.5 -->
+                    <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-5 space-y-4">
+                        <p class="text-xl md:text-2xl font-extrabold text-sky-950">8.5. Напиши формули, за якими можна обчислити...</p>
+                        <div class="space-y-3">
+                            <div class="bg-white p-4 rounded-xl border border-sky-300 flex items-center justify-between gap-3">
+                                <span class="text-lg md:text-xl font-bold text-slate-800">масу тіла, якщо відомі об’єм та густина:</span>
+                                <button onclick="this.innerHTML = '$m = \\rho \\cdot V$'; renderMath();" class="bg-sky-600 text-white font-black text-xl px-5 py-2 rounded-xl shrink-0">Показати</button>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-sky-300 flex items-center justify-between gap-3">
+                                <span class="text-lg md:text-xl font-bold text-slate-800">об’єм тіла, якщо відомі густина та маса:</span>
+                                <button onclick="this.innerHTML = '$V = \\frac{m}{\\rho}$'; renderMath();" class="bg-sky-600 text-white font-black text-xl px-5 py-2 rounded-xl shrink-0">Показати</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8.6 -->
+                    <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-5 flex flex-col justify-between gap-3">
+                        <p class="text-xl md:text-2xl font-extrabold text-indigo-950">
+                            8.6. Порівняй об’єми води масою $1\ \text{кг}$ та льоду масою $1\ \text{кг}$.
+                        </p>
+                        <button onclick="revealBlock(this)" class="w-full bg-white hover:bg-indigo-100 border-2 border-indigo-400 text-indigo-900 font-bold text-xl py-3 rounded-xl transition">Показати порівняння</button>
+                        <div class="hidden bg-white border-2 border-indigo-500 p-4 rounded-xl text-xl font-bold text-indigo-950">
+                            <strong>Об’єм льоду більший</strong> ($V_{\text{льоду}} > V_{\text{води}}$), тому що за однакової маси ($1\ \text{кг}$) густина льоду ($900\ \frac{\text{кг}}{\text{м}^3}$) менша за густину води ($1\,000\ \frac{\text{кг}}{\text{м}^3}$).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЛАЙД 5: ЗАВДАННЯ 8.7 ТА 8.8 (ТОЧНІ ГРАФІКИ ЗАЛЕЖНОСТІ m(V)) -->
+        <section id="slide-4" class="slide-content hidden w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-chart-line text-rose-600"></i> Завдання 8.7–8.8. Графіки залежності маси від об’єму
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- ЗАВДАННЯ 8.7: Побудова точного графіка -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-extrabold text-slate-900 mb-2">
+                                8.7. Побудуй графік залежності маси тіла від його об’єму, якщо густина тіла є сталою.
+                            </h3>
+                            <p class="text-lg font-semibold text-slate-600">Обери густину речовини або натисни на сітку графіка, щоб побудувати пряму пропорційність $m = \rho V$:</p>
+                        </div>
+
+                        <div class="flex flex-col items-center bg-white p-4 rounded-2xl border-2 border-slate-300">
+                            <!-- Точний SVG графік по клітинках (крок 30px) -->
+                            <svg id="graph-87" viewBox="0 0 330 330" class="w-full max-w-[320px] h-auto cursor-pointer" onclick="plot87Custom(event)">
+                                <!-- Сітка 10x10 клітинок (крок 28px, початок осі (42, 288)) -->
+                                <defs>
+                                    <pattern id="grid87" width="28" height="28" patternUnits="userSpaceOnUse" x="42" y="8">
+                                        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+                                    </pattern>
+                                </defs>
+                                <rect x="14" y="8" width="308" height="308" fill="url(#grid87)" stroke="#94a3b8" stroke-width="1.5"/>
+                                
+                                <!-- Вісь m (вертикальна) -->
+                                <line x1="42" y1="288" x2="42" y2="16" stroke="#0f172a" stroke-width="2.5"/>
+                                <polygon points="42,10 37,22 47,22" fill="#0f172a"/>
+                                <text x="20" y="28" font-family="serif" font-style="italic" font-weight="bold" font-size="22" fill="#0f172a">m</text>
+
+                                <!-- Вісь V (горизонтальна) -->
+                                <line x1="42" y1="288" x2="314" y2="288" stroke="#0f172a" stroke-width="2.5"/>
+                                <polygon points="320,288 308,283 308,293" fill="#0f172a"/>
+                                <text x="302" y="310" font-family="serif" font-style="italic" font-weight="bold" font-size="22" fill="#0f172a">V</text>
+
+                                <!-- Початок координат 0 -->
+                                <text x="24" y="308" font-family="serif" font-weight="bold" font-size="20" fill="#0f172a">0</text>
+
+                                <!-- Лінія графіка (спочатку прихована) -->
+                                <line id="line-87" x1="42" y1="288" x2="266" y2="64" stroke="#0284c7" stroke-width="4" stroke-linecap="round" class="hidden"/>
+                                <!-- Точки на вузлах клітинок -->
+                                <g id="dots-87" fill="#0284c7" class="hidden">
+                                    <circle cx="42" cy="288" r="5"/>
+                                    <circle cx="98" cy="232" r="5"/>
+                                    <circle cx="154" cy="176" r="5"/>
+                                    <circle cx="210" cy="120" r="5"/>
+                                    <circle cx="266" cy="64" r="5"/>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <button onclick="setGraph87(1)" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg px-4 py-2.5 rounded-xl transition">Побудувати графік ($m = \rho V$)</button>
+                            <button onclick="setGraph87(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg px-4 py-2.5 rounded-xl transition">Більша густина</button>
+                            <button onclick="setGraph87(0.5)" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-4 py-2.5 rounded-xl transition">Менша густина</button>
+                        </div>
+                        <p class="text-lg font-bold text-sky-900 bg-sky-100 p-3 rounded-xl text-center">
+                            Висновок: Графіком залежності $m(V)$ при $\rho = \text{const}$ є <strong>пряма лінія, що проходить через початок координат $(0; 0)$</strong>.
+                        </p>
+                    </div>
+
+                    <!-- ЗАВДАННЯ 8.8: Порівняння двох графіків I та II -->
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-extrabold text-slate-900 mb-2">
+                                8.8. Розглянь графіки залежності маси від об’єму для двох тіл. Порівняй густини речовин, з яких виготовлено тіла.
+                            </h3>
+                        </div>
+
+                        <div class="flex flex-col items-center bg-white p-4 rounded-2xl border-2 border-slate-300 relative">
+                            <!-- Точний SVG графік I та II за клітинками як на скріншоті -->
+                            <svg viewBox="0 0 330 330" class="w-full max-w-[320px] h-auto">
+                                <defs>
+                                    <pattern id="grid88" width="28" height="28" patternUnits="userSpaceOnUse" x="42" y="8">
+                                        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+                                    </pattern>
+                                </defs>
+                                <rect x="14" y="8" width="308" height="308" fill="url(#grid88)" stroke="#94a3b8" stroke-width="1.5"/>
+
+                                <!-- Вісь m -->
+                                <line x1="42" y1="288" x2="42" y2="16" stroke="#0f172a" stroke-width="2.5"/>
+                                <polygon points="42,10 37,22 47,22" fill="#0f172a"/>
+                                <text x="18" y="28" font-family="serif" font-style="italic" font-weight="bold" font-size="22" fill="#0f172a">m</text>
+
+                                <!-- Вісь V -->
+                                <line x1="42" y1="288" x2="314" y2="288" stroke="#0f172a" stroke-width="2.5"/>
+                                <polygon points="320,288 308,283 308,293" fill="#0f172a"/>
+                                <text x="302" y="310" font-family="serif" font-style="italic" font-weight="bold" font-size="22" fill="#0f172a">V</text>
+                                <text x="24" y="308" font-family="serif" font-weight="bold" font-size="20" fill="#0f172a">0</text>
+
+                                <!-- Допоміжна пунктирна лінія V = const (на 6-й клітинці: x = 42 + 6*28 = 210) -->
+                                <g id="helper-88" class="hidden">
+                                    <line x1="210" y1="288" x2="210" y2="64" stroke="#e11d48" stroke-width="2.5" stroke-dasharray="6,5"/>
+                                    <line x1="42" y1="64" x2="210" y2="64" stroke="#e11d48" stroke-width="2" stroke-dasharray="5,5"/>
+                                    <line x1="42" y1="176" x2="210" y2="176" stroke="#e11d48" stroke-width="2" stroke-dasharray="5,5"/>
+                                    <circle cx="210" cy="64" r="5.5" fill="#e11d48"/>
+                                    <circle cx="210" cy="176" r="5.5" fill="#e11d48"/>
+                                    <text x="16" y="69" font-weight="bold" font-size="16" fill="#e11d48">m₁</text>
+                                    <text x="16" y="181" font-weight="bold" font-size="16" fill="#e11d48">m₂</text>
+                                    <text x="204" y="308" font-weight="bold" font-size="16" fill="#e11d48">V</text>
+                                </g>
+
+                                <!-- Промінь I: проходить через (0,0), (3 кл, 4 кл), (6 кл, 8 кл) -> x=210, y=64; далі до (7.5 кл, 10 кл) -> x=252, y=8 -->
+                                <line x1="42" y1="288" x2="245" y2="17" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+                                <text x="225" y="28" font-family="serif" font-weight="bold" font-size="22" fill="#0f172a">I</text>
+
+                                <!-- Промінь II: проходить через (0,0), (3 кл, 2 кл), (6 кл, 4 кл) -> x=210, y=176; далі до (9 кл, 6 кл) -> x=294, y=120 -->
+                                <line x1="42" y1="288" x2="294" y2="120" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+                                <text x="275" y="114" font-family="serif" font-weight="bold" font-size="22" fill="#0f172a">II</text>
+                            </svg>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <button onclick="document.getElementById('helper-88').classList.toggle('hidden')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-lg px-4 py-2.5 rounded-xl transition">
+                                <i class="fa-solid fa-ruler-combined mr-1"></i> Порівняти за однаковим $V$
+                            </button>
+                            <button onclick="revealBlock(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg px-4 py-2.5 rounded-xl transition">
+                                Показати відповідь
+                            </button>
+                            <div class="hidden w-full bg-emerald-100 border-2 border-emerald-500 text-emerald-950 p-3.5 rounded-xl text-lg md:text-xl font-bold text-center">
+                                $\rho_{\text{I}} > \rho_{\text{II}}$ (у 2 рази), оскільки за однакового об’єму $V$ маса першого тіла більша ($m_1 > m_2$), а кут нахилу графіка I більший.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЛАЙД 6: ЗАВДАННЯ 9 (РОЗВ'ЯЗУВАННЯ ЗАДАЧ 9.1–9.5) -->
+        <section id="slide-5" class="slide-content hidden w-full flex flex-col space-y-5 pb-6">
+            <div class="physics-board rounded-3xl p-5 md:p-8 flex flex-col gap-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-brain text-purple-600"></i> 9. Розв’яжи задачі, послуговуючись алгоритмом (с. 53)
+                    </h2>
+                    <div class="bg-purple-100 text-purple-950 font-bold px-4 py-2 rounded-xl text-base md:text-lg border border-purple-300">
+                        Довідник густин: залізо $7\,800$, мідь $8\,900$, алюміній $2\,700$, ртуть $13\,600$, вода $1\,000$, гас $800\ (\text{кг}/\text{м}^3)$
+                    </div>
+                </div>
+
+                <!-- Кнопки вибору задачі 9.1 - 9.5 -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchInnerTab('task-91', this)" class="tab-btn active text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Задача 9.1</button>
+                    <button onclick="switchInnerTab('task-92', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Задача 9.2</button>
+                    <button onclick="switchInnerTab('task-93', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition">Задача 9.3</button>
+                    <button onclick="switchInnerTab('task-94', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition flex items-center gap-2"><i class="fa-solid fa-head-side-virus text-sky-500"></i> Задача 9.4</button>
+                    <button onclick="switchInnerTab('task-95', this)" class="tab-btn text-lg md:text-xl font-black px-5 py-2.5 rounded-xl border-2 transition flex items-center gap-2"><i class="fa-solid fa-head-side-virus text-sky-500"></i> Задача 9.5</button>
+                </div>
+
+                <!-- Задача 9.1 -->
+                <div id="task-91" class="inner-tab bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 space-y-5">
+                    <p class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                        9.1. Обчисли об’єм залізної деталі масою $1,56\ \text{т}$.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl border border-slate-300 text-xl md:text-2xl font-bold">
+                        <span>Відповідь: $V =$</span>
+                        <input type="number" step="0.01" id="ans-91-in" placeholder="?" class="input-box w-36 text-2xl">
+                        <span>$\text{м}^3$</span>
+                        <button onclick="checkTaskNum('ans-91-in', 0.2, 'sol-91')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-2.5 rounded-xl transition">Перевірити</button>
+                        <button onclick="document.getElementById('sol-91').classList.toggle('hidden')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-black px-6 py-2.5 rounded-xl transition">Розв’язання</button>
+                    </div>
+                    <div id="sol-91" class="hidden bg-white border-2 border-sky-400 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-12 gap-4 text-xl md:text-2xl font-bold">
+                        <div class="md:col-span-5 border-b-2 md:border-b-0 md:border-r-2 border-slate-400 pr-4 space-y-2">
+                            <p class="font-black text-sky-800">Дано:</p>
+                            <p>$m = 1,56\ \text{т} = 1\,560\ \text{кг}$</p>
+                            <p>$\rho = 7\,800\ \frac{\text{кг}}{\text{м}^3}$ (залізо)</p>
+                            <div class="border-t-2 border-slate-400 pt-2 mt-2">
+                                <p>$V - ?$</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 pl-2 space-y-2">
+                            <p class="font-black text-sky-800">Розв’язання:</p>
+                            <p>$\rho = \frac{m}{V} \Rightarrow V = \frac{m}{\rho}$</p>
+                            <p>$V = \frac{1\,560\ \text{кг}}{7\,800\ \text{кг}/\text{м}^3} = 0,2\ \text{м}^3$</p>
+                            <p class="text-emerald-700 font-black pt-2">Відповідь: $V = 0,2\ \text{м}^3$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Задача 9.2 -->
+                <div id="task-92" class="inner-tab hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 space-y-5">
+                    <p class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                        9.2. Визнач масу однорідного мідного куба, довжина ребра якого дорівнює $10\ \text{см}$.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl border border-slate-300 text-xl md:text-2xl font-bold">
+                        <span>Відповідь: $m =$</span>
+                        <input type="number" step="0.1" id="ans-92-in" placeholder="?" class="input-box w-36 text-2xl">
+                        <span>$\text{кг}$</span>
+                        <button onclick="checkTaskNum('ans-92-in', 8.9, 'sol-92')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-2.5 rounded-xl transition">Перевірити</button>
+                        <button onclick="document.getElementById('sol-92').classList.toggle('hidden')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-black px-6 py-2.5 rounded-xl transition">Розв’язання</button>
+                    </div>
+                    <div id="sol-92" class="hidden bg-white border-2 border-sky-400 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-12 gap-4 text-xl md:text-2xl font-bold">
+                        <div class="md:col-span-5 border-b-2 md:border-b-0 md:border-r-2 border-slate-400 pr-4 space-y-2">
+                            <p class="font-black text-sky-800">Дано:</p>
+                            <p>$a = 10\ \text{см} = 0,1\ \text{м}$</p>
+                            <p>$\rho = 8\,900\ \frac{\text{кг}}{\text{м}^3}$ (мідь)</p>
+                            <div class="border-t-2 border-slate-400 pt-2 mt-2">
+                                <p>$m - ?$</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 pl-2 space-y-2">
+                            <p class="font-black text-sky-800">Розв’язання:</p>
+                            <p>$V = a^3 = (0,1\ \text{м})^3 = 0,001\ \text{м}^3$</p>
+                            <p>$m = \rho \cdot V = 8\,900\ \frac{\text{кг}}{\text{м}^3} \cdot 0,001\ \text{м}^3 = 8,9\ \text{кг}$</p>
+                            <p class="text-emerald-700 font-black pt-2">Відповідь: $m = 8,9\ \text{кг}$ (або $8\,900\ \text{г}$).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Задача 9.3 -->
+                <div id="task-93" class="inner-tab hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 space-y-5">
+                    <p class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                        9.3. Маса алюмінієвого куба об’ємом $200\ \text{см}^3$ дорівнює $270\ \text{г}$. Чи має куб порожнину? Якщо має, то визнач її об’єм.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl border border-slate-300 text-xl md:text-2xl font-bold">
+                        <span>Об’єм порожнини: $V_{\text{пор}} =$</span>
+                        <input type="number" id="ans-93-in" placeholder="?" class="input-box w-36 text-2xl">
+                        <span>$\text{см}^3$</span>
+                        <button onclick="checkTaskNum('ans-93-in', 100, 'sol-93')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-2.5 rounded-xl transition">Перевірити</button>
+                        <button onclick="document.getElementById('sol-93').classList.toggle('hidden')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-black px-6 py-2.5 rounded-xl transition">Розв’язання</button>
+                    </div>
+                    <div id="sol-93" class="hidden bg-white border-2 border-sky-400 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-12 gap-4 text-xl md:text-2xl font-bold">
+                        <div class="md:col-span-5 border-b-2 md:border-b-0 md:border-r-2 border-slate-400 pr-4 space-y-2">
+                            <p class="font-black text-sky-800">Дано:</p>
+                            <p>$V = 200\ \text{см}^3$</p>
+                            <p>$m = 270\ \text{г}$</p>
+                            <p>$\rho = 2,7\ \frac{\text{г}}{\text{см}^3}$ (алюміній)</p>
+                            <div class="border-t-2 border-slate-400 pt-2 mt-2">
+                                <p>$V_{\text{пор}} - ?$</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 pl-2 space-y-2">
+                            <p class="font-black text-sky-800">Розв’язання:</p>
+                            <p>1) Об’єм самого алюмінію: $V_{\text{ал}} = \frac{m}{\rho} = \frac{270\ \text{г}}{2,7\ \text{г}/\text{см}^3} = 100\ \text{см}^3$.</p>
+                            <p>2) Оскільки $V_{\text{ал}} < V$, куб має порожнину.</p>
+                            <p>3) $V_{\text{пор}} = V - V_{\text{ал}} = 200\ \text{см}^3 - 100\ \text{см}^3 = 100\ \text{см}^3$.</p>
+                            <p class="text-emerald-700 font-black pt-2">Відповідь: так, має; $V_{\text{пор}} = 100\ \text{см}^3$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Задача 9.4 -->
+                <div id="task-94" class="inner-tab hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 space-y-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center shrink-0 text-3xl shadow">
+                            <i class="fa-solid fa-head-side-virus"></i>
+                        </div>
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                            9.4. Залізну деталь масою $15,6\ \text{кг}$ повністю занурюють у ртуть. Чому дорівнює маса ртуті, яку ця деталь витиснула?
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl border border-slate-300 text-xl md:text-2xl font-bold">
+                        <span>Маса ртуті: $m_{\text{рт}} =$</span>
+                        <input type="number" step="0.1" id="ans-94-in" placeholder="?" class="input-box w-36 text-2xl">
+                        <span>$\text{кг}$</span>
+                        <button onclick="checkTaskNum('ans-94-in', 27.2, 'sol-94')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-2.5 rounded-xl transition">Перевірити</button>
+                        <button onclick="document.getElementById('sol-94').classList.toggle('hidden')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-black px-6 py-2.5 rounded-xl transition">Розв’язання</button>
+                    </div>
+                    <div id="sol-94" class="hidden bg-white border-2 border-sky-400 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-12 gap-4 text-xl md:text-2xl font-bold">
+                        <div class="md:col-span-5 border-b-2 md:border-b-0 md:border-r-2 border-slate-400 pr-4 space-y-2">
+                            <p class="font-black text-sky-800">Дано:</p>
+                            <p>$m_{\text{з}} = 15,6\ \text{кг}$</p>
+                            <p>$\rho_{\text{з}} = 7\,800\ \frac{\text{кг}}{\text{м}^3}$</p>
+                            <p>$\rho_{\text{рт}} = 13\,600\ \frac{\text{кг}}{\text{м}^3}$</p>
+                            <div class="border-t-2 border-slate-400 pt-2 mt-2">
+                                <p>$m_{\text{рт}} - ?$</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 pl-2 space-y-2">
+                            <p class="font-black text-sky-800">Розв’язання:</p>
+                            <p>1) Об’єм залізної деталі: $V_{\text{з}} = \frac{m_{\text{з}}}{\rho_{\text{з}}} = \frac{15,6}{7\,800} = 0,002\ \text{м}^3$.</p>
+                            <p>2) Об’єм витиснутої ртуті дорівнює об’єму деталі: $V_{\text{рт}} = V_{\text{з}} = 0,002\ \text{м}^3$.</p>
+                            <p>3) $m_{\text{рт}} = \rho_{\text{рт}} \cdot V_{\text{рт}} = 13\,600 \cdot 0,002 = 27,2\ \text{кг}$.</p>
+                            <p class="text-emerald-700 font-black pt-2">Відповідь: $m_{\text{рт}} = 27,2\ \text{кг}$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Задача 9.5 -->
+                <div id="task-95" class="inner-tab hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 space-y-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center shrink-0 text-3xl shadow">
+                            <i class="fa-solid fa-head-side-virus"></i>
+                        </div>
+                        <p class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                            9.5. Маса пляшки з гасом становить $4\ \text{кг}$, а без гасу — $400\ \text{г}$. Яка маса води поміститься в цю пляшку?
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl border border-slate-300 text-xl md:text-2xl font-bold">
+                        <span>Маса води: $m_{\text{в}} =$</span>
+                        <input type="number" step="0.1" id="ans-95-in" placeholder="?" class="input-box w-36 text-2xl">
+                        <span>$\text{кг}$</span>
+                        <button onclick="checkTaskNum('ans-95-in', 4.5, 'sol-95')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-2.5 rounded-xl transition">Перевірити</button>
+                        <button onclick="document.getElementById('sol-95').classList.toggle('hidden')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-black px-6 py-2.5 rounded-xl transition">Розв’язання</button>
+                    </div>
+                    <div id="sol-95" class="hidden bg-white border-2 border-sky-400 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-12 gap-4 text-xl md:text-2xl font-bold">
+                        <div class="md:col-span-5 border-b-2 md:border-b-0 md:border-r-2 border-slate-400 pr-4 space-y-2">
+                            <p class="font-black text-sky-800">Дано:</p>
+                            <p>$m_{\text{заг}} = 4\ \text{кг}$</p>
+                            <p>$m_{\text{пл}} = 400\ \text{г} = 0,4\ \text{кг}$</p>
+                            <p>$\rho_{\text{г}} = 800\ \frac{\text{кг}}{\text{м}^3}$ (гас)</p>
+                            <p>$\rho_{\text{в}} = 1\,000\ \frac{\text{кг}}{\text{м}^3}$ (вода)</p>
+                            <div class="border-t-2 border-slate-400 pt-2 mt-2">
+                                <p>$m_{\text{в}} - ?$</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 pl-2 space-y-2">
+                            <p class="font-black text-sky-800">Розв’язання:</p>
+                            <p>1) Маса гасу: $m_{\text{г}} = m_{\text{заг}} - m_{\text{пл}} = 4 - 0,4 = 3,6\ \text{кг}$.</p>
+                            <p>2) Місткість пляшки: $V = \frac{m_{\text{г}}}{\rho_{\text{г}}} = \frac{3,6}{800} = 0,0045\ \text{м}^3$.</p>
+                            <p>3) Маса води: $m_{\text{в}} = \rho_{\text{в}} \cdot V = 1\,000 \cdot 0,0045 = 4,5\ \text{кг}$.</p>
+                            <p class="text-emerald-700 font-black pt-2">Відповідь: $m_{\text{в}} = 4,5\ \text{кг}$.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ -->
+    <footer class="bg-white border-t-2 border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between shrink-0 shadow-sm z-10">
+        <button onclick="prevSlide()" id="btn-prev" class="btn-action bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-6 md:px-8 py-3 rounded-xl border border-slate-300 flex items-center gap-2 text-lg md:text-xl">
+            <i class="fa-solid fa-chevron-left"></i> Назад
+        </button>
+
+        <div class="hidden md:flex items-center gap-2">
+            <button onclick="goToSlide(0)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">1. Повторення</button>
+            <button onclick="goToSlide(1)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">2. Густина</button>
+            <button onclick="goToSlide(2)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">3. Будова і прилад</button>
+            <button onclick="goToSlide(3)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">4. Порівняння</button>
+            <button onclick="goToSlide(4)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">5. Графіки</button>
+            <button onclick="goToSlide(5)" class="slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border">6. Задачі 9.1–9.5</button>
+        </div>
+
+        <button onclick="nextSlide()" id="btn-next" class="btn-action bg-sky-600 hover:bg-sky-700 text-white font-extrabold px-6 md:px-8 py-3 rounded-xl shadow-md flex items-center gap-2 text-lg md:text-xl">
+            Далі <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 6;
+
+        function renderMath() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.log(err));
+            }
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.slide-content').forEach((el, index) => {
+                if (index === currentSlide) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.slide-dot').forEach((dot, idx) => {
+                if (idx === currentSlide) {
+                    dot.className = 'slide-dot px-3 py-1.5 rounded-lg font-black text-sm border-2 border-sky-600 bg-sky-50 text-sky-900';
+                } else {
+                    dot.className = 'slide-dot px-3 py-1.5 rounded-lg font-bold text-sm border border-slate-300 bg-white text-slate-600 hover:bg-slate-50';
+                }
+            });
+
+            document.getElementById('slide-indicator').innerText = `${currentSlide + 1} / ${totalSlides}`;
+            document.getElementById('main-scroll').scrollTop = 0;
+            
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            
+            btnPrev.disabled = currentSlide === 0;
+            btnPrev.style.opacity = currentSlide === 0 ? "0.4" : "1";
+            
+            if (currentSlide === totalSlides - 1) {
+                btnNext.innerHTML = 'На початок <i class="fa-solid fa-rotate-left ml-2"></i>';
+                btnNext.className = 'btn-action bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 md:px-8 py-3 rounded-xl shadow-md flex items-center gap-2 text-lg md:text-xl';
+            } else {
+                btnNext.innerHTML = 'Далі <i class="fa-solid fa-chevron-right"></i>';
+                btnNext.className = 'btn-action bg-sky-600 hover:bg-sky-700 text-white font-extrabold px-6 md:px-8 py-3 rounded-xl shadow-md flex items-center gap-2 text-lg md:text-xl';
+            }
+            renderMath();
+        }
+
+        function goToSlide(idx) {
+            currentSlide = idx;
+            updateUI();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+            } else {
+                currentSlide = 0;
+            }
+            updateUI();
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateUI();
+            }
+        }
+
+        function switchInnerTab(tabId, btn) {
+            const container = btn.closest('.physics-board');
+            container.querySelectorAll('.inner-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderMath();
+        }
+
+        function revealBlock(btn) {
+            btn.classList.add('hidden');
+            if (btn.nextElementSibling) {
+                btn.nextElementSibling.classList.remove('hidden');
+                renderMath();
+            }
+        }
+
+        /* Перевірка ареометра (Завдання 8.2) */
+        function checkAreometer() {
+            const val = document.getElementById('areometer-input').value.trim().toLowerCase();
+            const fb = document.getElementById('areometer-feedback');
+            fb.classList.remove('hidden');
+
+            document.getElementById('svg-areometer-title').classList.remove('opacity-0');
+            document.getElementById('svg-areometer-ballast').classList.remove('opacity-0');
+            document.getElementById('svg-areometer-scale').classList.remove('opacity-0');
+
+            if (val.includes('ареометр')) {
+                fb.className = 'p-4 rounded-xl text-lg font-bold bg-emerald-100 border-2 border-emerald-500 text-emerald-950';
+                fb.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Правильно! Це <strong>ареометр</strong>. Частини підписано на схемі.';
+            } else {
+                fb.className = 'p-4 rounded-xl text-lg font-bold bg-amber-100 border-2 border-amber-500 text-amber-950';
+                fb.innerHTML = 'Прилад називається <strong>ареометр</strong>. Підписи додано на рисунок.';
+            }
+        }
+
+        /* Завдання 8.3 */
+        function check83(btn, isCorrect) {
+            btn.parentElement.querySelectorAll('button').forEach(b => {
+                b.classList.remove('bg-emerald-100', 'border-emerald-500', 'bg-rose-100', 'border-rose-500');
+                b.classList.add('bg-white');
+            });
+            btn.classList.remove('bg-white');
+            if (isCorrect) {
+                btn.classList.add('bg-emerald-100', 'border-emerald-500');
+                document.getElementById('ans-83').classList.remove('hidden');
+                renderMath();
+            } else {
+                btn.classList.add('bg-rose-100', 'border-rose-500');
+            }
+        }
+
+        /* Завдання 8.4 */
+        function check84(btn, isCorrect) {
+            btn.parentElement.querySelectorAll('button').forEach(b => {
+                b.classList.remove('bg-emerald-100', 'border-emerald-500', 'bg-rose-100', 'border-rose-500');
+                b.classList.add('bg-white');
+            });
+            btn.classList.remove('bg-white');
+            if (isCorrect) {
+                btn.classList.add('bg-emerald-100', 'border-emerald-500');
+                const cells = document.getElementById('sort-84-row').querySelectorAll('td');
+                const ans = ['А', 'Г', 'В', 'Б'];
+                cells.forEach((c, i) => {
+                    c.innerText = ans[i];
+                    c.classList.add('bg-emerald-50', 'text-emerald-800');
+                });
+            } else {
+                btn.classList.add('bg-rose-100', 'border-rose-500');
+            }
+        }
+
+        /* Точний графік для 8.7 */
+        function setGraph87(slope) {
+            const line = document.getElementById('line-87');
+            const dots = document.getElementById('dots-87');
+            line.classList.remove('hidden');
+            dots.classList.remove('hidden');
+
+            const x0 = 42, y0 = 288, step = 28;
+            let x2, y2, pts = [];
+
+            if (slope === 1) {
+                x2 = x0 + 8 * step; y2 = y0 - 8 * step;
+                pts = [[0,0], [2,2], [4,4], [6,6], [8,8]];
+            } else if (slope === 2) {
+                x2 = x0 + 4.5 * step; y2 = y0 - 9 * step;
+                pts = [[0,0], [1,2], [2,4], [3,6], [4,8]];
+            } else {
+                x2 = x0 + 9 * step; y2 = y0 - 4.5 * step;
+                pts = [[0,0], [2,1], [4,2], [6,3], [8,4]];
+            }
+
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+
+            const circles = dots.querySelectorAll('circle');
+            pts.forEach((p, idx) => {
+                if (circles[idx]) {
+                    circles[idx].setAttribute('cx', x0 + p[0] * step);
+                    circles[idx].setAttribute('cy', y0 - p[1] * step);
+                }
+            });
+        }
+
+        function plot87Custom(event) {
+            const svg = document.getElementById('graph-87');
+            const rect = svg.getBoundingClientRect();
+            const clickX = ((event.clientX - rect.left) / rect.width) * 330;
+            const clickY = ((event.clientY - rect.top) / rect.height) * 330;
+            const dx = clickX - 42;
+            const dy = 288 - clickY;
+            if (dx > 10 && dy > 10) {
+                const ratio = dy / dx;
+                if (ratio > 1.4) setGraph87(2);
+                else if (ratio < 0.7) setGraph87(0.5);
+                else setGraph87(1);
+            }
+        }
+
+        /* Перевірка числових відповідей у задачах 9.1 - 9.5 */
+        function checkTaskNum(inputId, expected, solId) {
+            const input = document.getElementById(inputId);
+            const val = parseFloat(input.value.replace(',', '.'));
+            if (!isNaN(val) && Math.abs(val - expected) < 0.05) {
+                input.classList.remove('bg-sky-50', 'bg-rose-100', 'border-rose-500');
+                input.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+                document.getElementById(solId).classList.remove('hidden');
+                renderMath();
+            } else {
+                input.classList.remove('bg-sky-50', 'bg-emerald-100', 'border-emerald-500');
+                input.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        window.onload = updateUI;
+    </script>
+</body>
+</html>
